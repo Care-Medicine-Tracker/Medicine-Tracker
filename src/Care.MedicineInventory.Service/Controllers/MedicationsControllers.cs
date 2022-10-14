@@ -71,7 +71,6 @@ namespace Care.MedicineInventory.Service.Controller
 
             existingMedicine.Name = updateMedicineDto.Name;
             existingMedicine.Description = updateMedicineDto.Description;
-            existingMedicine.CreatedDate = updateMedicineDto.CreatedDate;
 
             await medicineRepository.UpdateAsync(existingMedicine);
 
