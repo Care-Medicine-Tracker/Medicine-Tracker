@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Care.MedicineInventory.Service.Dtos;
+using Care.MedicineInventory.Service.Entities;
+using Care.MedicineInventory.Service.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Care.MedicineInventory.Service.Controller
@@ -14,35 +17,79 @@ namespace Care.MedicineInventory.Service.Controller
     // the ControllerBase provides many properties and methods for handling HTTP requests
     public class ItemsController : ControllerBase
     {
-        private static readonly List<MedicineDto> medicines = new()
-        {
-            new MedicineDto(Guid.NewGuid(), "Melatonin", "Helps with falling asleep", DateTimeOffset.UtcNow),
-            new MedicineDto(Guid.NewGuid(), "Melatonin", "Helps with falling asleep", DateTimeOffset.UtcNow),
-            new MedicineDto(Guid.NewGuid(), "Melatonin", "Helps with falling asleep", DateTimeOffset.UtcNow)
-        };
+        private readonly MedicinesRepository medicineRepository = new();
 
         // returns list of registered medications
         [HttpGet]
-        public IEnumerable<MedicineDto> Get()
+        public async Task<IEnumerable<MedicineDto>> GetAsync()
         {
+            var medicines = (await medicineRepository.GetAllAsync())
+                            .Select(medicine => medicine.AsDto());
             return medicines;
         }
 
         // returns specified medication
         [HttpGet("{id}")]
-        public MedicineDto GetById(Guid id)
+        public async Task<ActionResult<MedicineDto>> GetByIdAsync(Guid id)
         {
-            var medicine = medicines.Where(medicine => medicine.Id == id).SingleOrDefault();
-            return medicine;
+            var medicine = await medicineRepository.GetAsync(id);
+
+            if (medicine == null)
+            {
+                return NotFound();
+            }
+
+            return medicine.AsDto();
         }
 
         //creates medication
-        [HttpPost]
-        public ActionResult<MedicineDto> Post(CreateMedicineDto createMedicineDto)
+        [HttpPost("{id}")]
+        public async Task<ActionResult<MedicineDto>> PostAsync(CreateMedicineDto createMedicineDto)
         {
-            var medicine = new MedicineDto(Guid.NewGuid(), createMedicineDto.Name, createMedicineDto.Description, DateTimeOffset.UtcNow);
-            medicines.Add(medicine);
-            return CreatedAtAction(nameof(GetById), new { id = medicine.Id }, medicine);
+            var medicine = new Medicine
+            {
+                Name = createMedicineDto.Name,
+                Description = createMedicineDto.Description,
+                CreatedDate = DateTimeOffset.UtcNow
+            };
+
+            await medicineRepository.CreateAsync(medicine);
+
+            return CreatedAtAction(nameof(GetByIdAsync), new { id = medicine.Id }, medicine);
+        }
+
+        //Put updating medication info
+        public async Task<IActionResult> PutAsync(Guid id, UpdateMedicineDto updateMedicineDto)
+        {
+            var existingMedicine = await medicineRepository.GetAsync(id);
+
+            if (existingMedicine == null)
+            {
+                return NotFound();
+            }
+
+            existingMedicine.Name = updateMedicineDto.Name;
+            existingMedicine.Description = updateMedicineDto.Description;
+            existingMedicine.CreatedDate = updateMedicineDto.CreatedDate;
+
+            await medicineRepository.UpdateAsync(existingMedicine);
+
+            return NoContent();
+        }
+
+        //Delete medication
+        public async Task<IActionResult> DeleteAsync(Guid id)
+        {
+            var medicine = await medicineRepository.GetAsync(id);
+
+            if (medicine == null)
+            {
+                return NotFound();
+            }
+
+            await medicineRepository.RemoveAsync(medicine.Id);
+
+            return NoContent();
         }
     }
 }
