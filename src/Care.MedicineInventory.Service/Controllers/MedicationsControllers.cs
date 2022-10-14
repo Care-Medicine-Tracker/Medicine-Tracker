@@ -59,6 +59,7 @@ namespace Care.MedicineInventory.Service.Controller
         }
 
         //Put updating medication info
+        [HttpPut("{id}")]
         public async Task<IActionResult> PutAsync(Guid id, UpdateMedicineDto updateMedicineDto)
         {
             var existingMedicine = await medicineRepository.GetAsync(id);
@@ -78,6 +79,7 @@ namespace Care.MedicineInventory.Service.Controller
         }
 
         //Delete medication
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(Guid id)
         {
             var medicine = await medicineRepository.GetAsync(id);

@@ -28,10 +28,12 @@ namespace Care.MedicineInventory.Service
         {
 
             //the options SuppressAsyncSuffixInActionNames is so that asp.net does not remove the async name of methods by runtime
-            services.AddControllers(options =>
-            {
-                options.SuppressAsyncSuffixInActionNames = false;
-            });
+            services.AddControllers();
+
+            // services.AddControllers(options =>
+            // {
+            //     options.SuppressAsyncSuffixInActionNames = false;
+            // });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Care.MedicineInventory.Service", Version = "v1" });
@@ -53,7 +55,7 @@ namespace Care.MedicineInventory.Service
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseDeveloperExceptionPage();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
