@@ -11,6 +11,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 
 namespace Care.MedicineInventory.Service
 {
@@ -26,14 +29,16 @@ namespace Care.MedicineInventory.Service
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //transforms id to a more readable way, any guid will be transformed into a string
+            BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
+            //transforms datetime to a more readable way, any datetime will be transformed into a string
+            BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(BsonType.String));
 
             //the options SuppressAsyncSuffixInActionNames is so that asp.net does not remove the async name of methods by runtime
-            services.AddControllers();
-
-            // services.AddControllers(options =>
-            // {
-            //     options.SuppressAsyncSuffixInActionNames = false;
-            // });
+            services.AddControllers(options =>
+            {
+                options.SuppressAsyncSuffixInActionNames = false;
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Care.MedicineInventory.Service", Version = "v1" });
