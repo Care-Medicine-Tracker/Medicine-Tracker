@@ -43,7 +43,7 @@ namespace Care.MedicineInventory.Service.Controller
         }
 
         //creates medication
-        [HttpPost("{id}")]
+        [HttpPost]
         public async Task<ActionResult<MedicineDto>> PostAsync(CreateMedicineDto createMedicineDto)
         {
             var medicine = new Medicine
