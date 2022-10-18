@@ -2,7 +2,8 @@ using System;
 
 namespace Care.MedicineInventory.Service.Entities
 {
-    public class Medicine
+
+    public class Medicine : IEntity
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

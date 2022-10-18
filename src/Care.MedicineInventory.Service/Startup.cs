@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Care.MedicineInventory.Service.Entities;
 using Care.MedicineInventory.Service.Repositories;
 using Care.MedicineInventory.Service.Settings;
 using Microsoft.AspNetCore.Builder;
@@ -33,22 +34,12 @@ namespace Care.MedicineInventory.Service
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //transforms id to a more readable way, any guid will be transformed into a string
-            BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
-            //transforms datetime to a more readable way, any datetime will be transformed into a string
-            BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(BsonType.String));
-
             serviceSettings = Configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
 
-            services.AddSingleton(serviceProvider =>
-            {
-                var mongoDbSettings = Configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
-                var mongoClient = new MongoClient(mongoDbSettings.ConnectionString);
-                return mongoClient.GetDatabase(serviceSettings.ServiceName);
-            });
-
-            services.AddSingleton<IMedicinesRepository, MedicinesRepository>();
-
+            //registers the mongo client and Imongo database
+            services.AddMongo()
+                    .AddRepository<Medicine>("medicines");
+            
             //the options SuppressAsyncSuffixInActionNames is so that asp.net does not remove the async name of methods by runtime
             services.AddControllers(options =>
             {

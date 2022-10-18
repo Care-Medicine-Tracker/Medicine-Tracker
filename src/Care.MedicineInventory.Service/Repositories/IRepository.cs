@@ -5,12 +5,12 @@ using Care.MedicineInventory.Service.Entities;
 
 namespace Care.MedicineInventory.Service.Repositories
 {
-    public interface IMedicinesRepository
+    public interface IRepository<T> where T : IEntity
     {
-        Task CreateAsync(Medicine entity);
-        Task<IReadOnlyCollection<Medicine>> GetAllAsync();
-        Task<Medicine> GetAsync(Guid id);
+        Task CreateAsync(T entity);
+        Task<IReadOnlyCollection<T>> GetAllAsync();
+        Task<T> GetAsync(Guid id);
         Task RemoveAsync(Guid id);
-        Task UpdateAsync(Medicine entity);
+        Task UpdateAsync(T entity);
     }
 }

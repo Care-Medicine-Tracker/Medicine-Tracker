@@ -17,9 +17,9 @@ namespace Care.MedicineInventory.Service.Controller
     // the ControllerBase provides many properties and methods for handling HTTP requests
     public class MedicinesController : ControllerBase
     {
-        private readonly IMedicinesRepository medicineRepository;
+        private readonly IRepository<Medicine> medicineRepository;
 
-        public MedicinesController(IMedicinesRepository medicineRepository)
+        public MedicinesController(IRepository<Medicine> medicineRepository)
         {
             this.medicineRepository = medicineRepository;
         }
