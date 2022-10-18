@@ -1,4 +1,5 @@
 using System;
+using Care.Common;
 
 namespace Care.MedicineInventory.Service.Entities
 {

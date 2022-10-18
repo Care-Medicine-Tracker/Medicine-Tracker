@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Care.Common;
 using Care.MedicineInventory.Service.Dtos;
 using Care.MedicineInventory.Service.Entities;
-using Care.MedicineInventory.Service.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Care.MedicineInventory.Service.Controller
