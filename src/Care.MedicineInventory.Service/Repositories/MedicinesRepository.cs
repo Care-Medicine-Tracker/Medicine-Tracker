@@ -6,7 +6,8 @@ using MongoDB.Driver;
 
 namespace Care.MedicineInventory.Service.Repositories
 {
-    public class MedicinesRepository
+
+    public class MedicinesRepository : IMedicinesRepository
     {
         // represents a group of objects in mongodb
         // in a relational database would a collection be a table
@@ -19,12 +20,8 @@ namespace Care.MedicineInventory.Service.Repositories
         private readonly FilterDefinitionBuilder<Medicine> filterBuilder = Builders<Medicine>.Filter;
 
         //constructor
-        public MedicinesRepository()
+        public MedicinesRepository(IMongoDatabase database)
         {
-            //declaring how to connect to mongodb
-            var mongoClient = new MongoClient("mongodb://localhost:27017");
-            //object that represents the database where medicines data is stored
-            var database = mongoClient.GetDatabase("Medicine");
             dbCollection = database.GetCollection<Medicine>(collectionName);
         }
 

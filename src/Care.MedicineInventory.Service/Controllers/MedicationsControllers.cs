@@ -12,12 +12,17 @@ namespace Care.MedicineInventory.Service.Controller
     //API controller attribute is to improve the rest api developer experience.
     [ApiController]
     //Route "https:localhost:5001/medications" will be handled by this controller.
-    [Route("medications")]
+    [Route("medicines")]
     // each of the webapi controllers should be derived from ControllerBase
     // the ControllerBase provides many properties and methods for handling HTTP requests
-    public class ItemsController : ControllerBase
+    public class MedicinesController : ControllerBase
     {
-        private readonly MedicinesRepository medicineRepository = new();
+        private readonly IMedicinesRepository medicineRepository;
+
+        public MedicinesController(IMedicinesRepository medicineRepository)
+        {
+            this.medicineRepository = medicineRepository;
+        }
 
         // returns list of registered medications
         [HttpGet]
