@@ -31,7 +31,7 @@ Is the vision of the project a bit less in functionality where the new goal for 
 
 ## Repositories of the project
 
-| Tools | Usage |
+| Repositories | Description |
 |--|--|
 | [Medicine-Tracker](https://github.com/Care-Medicine-Tracker/Medicine-Tracker/tree/main/Documentation) | Documentation regarding the design, infrastructure and choices made to the project. |
 | [MedicineInventory](https://github.com/Care-Medicine-Tracker/MedicineInventory) | The Medicine Inventory Service is in charge of all registered medicines to the Care web-application. |
